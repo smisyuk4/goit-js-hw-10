@@ -7,9 +7,10 @@ body {
     Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  background-color: #fafafa;
+  /* background-color: #fafafa; */
   color: #212121;
   line-height: 1.5;
+  background-image: linear-gradient(135deg, #FFA8A8 10%, #FCFF00 100%);
 }
 
 #search-box {
@@ -17,4 +18,57 @@ body {
   padding: 8px;
   max-width: 320px;
   margin-bottom: 16px;
+}
+
+.country-list{
+  list-style: none;
+}
+
+.country-item {
+  display: flex;
+  align-items: center;
+}
+
+.country-item:not(:last-child) {
+  margin-bottom: 5px;
+}
+
+.name-official{
+  margin-left: 10px;
+  font-size: 24px;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.name {
+  display: inline;
+  margin: 0;
+  padding: 0;
+  margin-left: 10px;
+  font-size: 40px;
+  font-weight: 900;
+  text-transform: uppercase;
+}
+
+.country-card {
+  padding: 10px;
+  width: 500px;
+  background-color: azure;
+  border: 2px solid black;
+}
+
+.title {
+  display: flex;
+  justify-content: center;
+  align-items: baseline;
+}
+
+.description-list {
+  list-style: none;
+}
+
+.description-list span {
+  font-size: 24px;
+  font-weight: 900;
+  color: rgb(255, 115, 0);
 }

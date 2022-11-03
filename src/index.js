@@ -71,14 +71,6 @@ const refs = {
 
 const DEBOUNCE_DELAY = 300;
 
-const dataCuntry = {
-    nameOfficial: '',
-    capital: '',
-    population: null,
-    flagsSvg: '',
-    languages: [],
-}
-
 refs.input.addEventListener('input', debounce(findCountry, DEBOUNCE_DELAY))
 
 function findCountry(event) {

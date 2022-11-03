@@ -95,8 +95,7 @@ function findCountry(event) {
     })
     .then(response => {
         console.log(response)
-        refs.list.innerHTML = ""
-        refs.info.innerHTML = ""
+        clearPage()
 
         if (response.length == 1) {
             const name = response[0].name.official
@@ -124,9 +123,13 @@ function findCountry(event) {
         }
     })
     .catch(error => {
-        refs.list.innerHTML = ""
-        refs.info.innerHTML = ""
+        clearPage()
         Notify.failure('Oops, there is no country with that name.');
         Notify.failure(`${error}`);
     })
+}
+
+function clearPage() {
+    refs.list.innerHTML = ""
+    refs.info.innerHTML = ""
 }

@@ -69,7 +69,7 @@ const refs = {
     info: document.querySelector('.country-info'),
 }
 
-const DEBOUNCE_DELAY = 1000;
+const DEBOUNCE_DELAY = 300;
 
 const dataCuntry = {
     nameOfficial: '',

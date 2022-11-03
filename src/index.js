@@ -29,10 +29,10 @@
 // Використовуй пакет lodash.debounce.
 // https://www.npmjs.com/package/lodash.debounce
 
-// 6. Якщо користувач повністю очищає поле пошуку, то HTTP-запит не виконується, 
+// 6+. Якщо користувач повністю очищає поле пошуку, то HTTP-запит не виконується, 
 // а розмітка списку країн або інформації про країну зникає.
 
-// 7. Виконай санітизацію введеного рядка методом trim(), 
+// 7+. Виконай санітизацію введеного рядка методом trim(), 
 // це вирішить проблему, коли в полі введення тільки пробіли, 
 // або вони є на початку і в кінці рядка.
 
@@ -79,16 +79,21 @@ const dataCuntry = {
     languages: [],
 }
 
-refs.input.addEventListener('input', debounce(findCo, DEBOUNCE_DELAY))
+refs.input.addEventListener('input', debounce(findCountry, DEBOUNCE_DELAY))
 
-function findCo(event) {
-    const name = event.target.value
+function findCountry(event) {
+    let name = event.target.value
+    name = name.trim()
     console.log(name)
+
     fetchContries(name).then(response => {
         return response;
     })
     .then(response => {
-        console.log(response) //array
+        console.log(response)
+        refs.list.innerHTML = ""
+        refs.info.innerHTML = ""
+
         if (response.length == 1) {
             const languages = Object.values(response[0].languages)
 
@@ -123,6 +128,9 @@ function findCo(event) {
         }
     })
     .catch(error => {
-        Notify.failure('Oops, there is no country with that name. ' + error);
+        refs.list.innerHTML = ""
+        refs.info.innerHTML = ""
+        Notify.failure('Oops, there is no country with that name.');
+        Notify.failure(`${error}`);
     })
 }

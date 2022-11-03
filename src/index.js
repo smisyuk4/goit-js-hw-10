@@ -57,11 +57,20 @@
 // Додай повідомлення "Oops, there is no country with that name" у разі помилки, 
 // використовуючи бібліотеку notiflix.
 
+// 12. Зробити шаблони розмітки
+// https://handlebarsjs.com/installation/#npm-or-yarn-recommended
+// npm install handlebars
+
+
 import './css/styles.css';
 const debounce = require('lodash.debounce'); 
 import { Notify } from 'notiflix/build/notiflix-notify-aio';
 import 'notiflix/dist/notiflix-3.2.5.min.css'
 import fetchContries from '../src/fetchCountries.js'
+
+const Handlebars = require("handlebars");
+import countryCard from '../src/template/country-card.js'
+import countryList from '../src/template/country-list.js'
 
 const refs = {
     input: document.querySelector('#search-box'),
@@ -70,6 +79,9 @@ const refs = {
 }
 
 const DEBOUNCE_DELAY = 300;
+
+const templateCard = Handlebars.compile(countryCard);
+const templateList = Handlebars.compile(countryList);
 
 refs.input.addEventListener('input', debounce(findCountry, DEBOUNCE_DELAY))
 
@@ -87,29 +99,21 @@ function findCountry(event) {
         refs.info.innerHTML = ""
 
         if (response.length == 1) {
-            const languages = Object.values(response[0].languages)
-
-            const markup = `<div class="country-card">
-                                <div class="title">
-                                    <img class="flag" src="${response[0].flags.svg}" alt="${response[0].name.official} min-width=" 40" height="30"">
-                                    <h1 class="name">${response[0].name.official}</h1>
-                                </div>                                    
-                                <ul class="description-list">
-                                    <li><span class="capital">capital:  </span> ${response[0].capital}</li>
-                                    <li><span class="population">population:  </span> ${response[0].population}</li>
-                                    <li><span class="languages">languages:  </span> ${languages.join(', ')}</li>
-                                </ul>
-                            </div>`
-
-            refs.info.insertAdjacentHTML('beforeend', markup)
+            const name = response[0].name.official
+            const flag = response[0].flags.svg
+            const capital = response[0].capital
+            const population = response[0].population
+            const languages = Object.values(response[0].languages).join(', ')
+            
+            refs.info.insertAdjacentHTML('beforeend', templateCard({ name, flag, capital, population, languages }))
         }
 
         if (response.length > 2 && response.length <= 10) {
             const markup = response.map(country => {
-                return `<li class="country-item">
-                            <img class="flag" src="${country.flags.svg}" alt="${country.name.official} min-width="40" height="30"">
-                            <span class="name-official">${country.name.official}</span>
-                        </li>`
+                const name = country.name.official
+                const flag = country.flags.svg
+
+                return templateList({name, flag})                
             }).join('')
         
             refs.list.insertAdjacentHTML('beforeend', markup)

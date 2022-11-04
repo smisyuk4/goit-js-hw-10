@@ -59,7 +59,7 @@
 
 // 12. Зробити шаблони розмітки
 // https://handlebarsjs.com/installation/#npm-or-yarn-recommended
-// npm install handlebars
+// npm uninstall handlebars
 
 
 import './css/styles.css';
@@ -67,8 +67,6 @@ const debounce = require('lodash.debounce');
 import { Notify } from 'notiflix/build/notiflix-notify-aio';
 import 'notiflix/dist/notiflix-3.2.5.min.css'
 import fetchContries from '../src/fetchCountries.js'
-
-const Handlebars = require("handlebars");
 import countryCard from '../src/template/country-card.js'
 import countryList from '../src/template/country-list.js'
 
@@ -80,45 +78,44 @@ const refs = {
 
 const DEBOUNCE_DELAY = 300;
 
-const templateCard = Handlebars.compile(countryCard);
-const templateList = Handlebars.compile(countryList);
-
 refs.input.addEventListener('input', debounce(findCountry, DEBOUNCE_DELAY))
 
 function findCountry(event) {
     let name = event.target.value
     name = name.trim()
-    console.log(name)
 
     fetchContries(name).then(response => {
         return response;
     })
-    .then(response => {
-        console.log(response)
+    .then(result => {
         clearPage()
 
-        if (response.length == 1) {
-            const name = response[0].name.official
-            const flag = response[0].flags.svg
-            const capital = response[0].capital
-            const population = response[0].population
-            const languages = Object.values(response[0].languages).join(', ')
-            
-            refs.info.insertAdjacentHTML('beforeend', templateCard({ name, flag, capital, population, languages }))
+        if (result.length === 1) {
+            const country = {
+                name: result[0].name.official,
+                flag: result[0].flags.svg,
+                capital: result[0].capital,
+                population: result[0].population,
+                languages: Object.values(result[0].languages).join(', '),
+            }
+
+            refs.info.insertAdjacentHTML('beforeend', countryCard(country))
         }
 
-        if (response.length > 2 && response.length <= 10) {
-            const markup = response.map(country => {
-                const name = country.name.official
-                const flag = country.flags.svg
+        if (result.length > 2 && result.length <= 10) {
+            const markup = result.map(item => {
+                const country = {
+                    name: item.name.official,
+                    flag: item.flags.svg,                
+                }               
 
-                return templateList({name, flag})                
+                return countryList(country)                
             }).join('')
         
             refs.list.insertAdjacentHTML('beforeend', markup)
         }
         
-        if (response.length > 10) {
+        if (result.length > 10) {
             Notify.info('Too many matches found. Please enter a more specific name.');
         }
     })
